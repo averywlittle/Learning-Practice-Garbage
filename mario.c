@@ -30,7 +30,7 @@ void print_pyramids(int y)
     {
         print_spaces(i, y);
         print_hashes(i);
-        printf(" ");
+        printf("  ");
         print_hashes(i);
         printf("\n");
     }
