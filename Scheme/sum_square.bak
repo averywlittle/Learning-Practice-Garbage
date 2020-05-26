@@ -1,0 +1,9 @@
+#lang racket
+(define (square x) (* x x))
+
+(define (sum_square a b c)
+  (cond ((and (>= a b)(> b c)))(+ (square a)(square b))
+        ((and (>= b c)(> c a)))(+ (square b)(square c))
+        (else(+ (square a)(square c)))))
+
+(sum_square 2 3 4)
