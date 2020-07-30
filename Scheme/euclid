@@ -1,0 +1,7 @@
+#lang racket
+
+;Euclid's algorithm for finding greatest common divisors (GCDs)
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
