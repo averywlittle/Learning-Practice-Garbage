@@ -1,5 +1,6 @@
 #include <cs50.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void cipher(string pt, int key);
@@ -11,7 +12,7 @@ int main(int argc, string argv[])
     // Input int for key
     if (argc == 2)
     {
-        for(int i = 0, n = strlen(argv[1]); i < n; i++)
+        for (int i = 0, n = strlen(argv[1]); i < n; i++)
         {
             if (48 <= argv[1][i] && argv[1][i] <= 57)
             {
@@ -20,7 +21,7 @@ int main(int argc, string argv[])
             else
             {
                 printf("Usage: ./caesar key\n");
-                return(1);
+                return (1);
             }
         }
         key = atoi(argv[1]);
@@ -28,12 +29,12 @@ int main(int argc, string argv[])
     else
     {
         printf("Usage: ./caesar key\n");
-        return(1);
+        return (1);
     }
-    
-    // Getstring for plaintext  
+
+    // Getstring for plaintext
     string pt = get_string("plaintext: ");
-    
+
     // Output cipher text
     cipher(pt, key);
 }
@@ -41,7 +42,7 @@ int main(int argc, string argv[])
 void cipher(string pt, int key)
 {
     printf("ciphertext: ");
-    for(int i = 0, n = strlen(pt); i < n; i++)
+    for (int i = 0, n = strlen(pt); i < n; i++)
     {
         // If upper, rotate and preserve case
         if (pt[i] >= 'A' && pt[i] <= 'Z')
@@ -54,7 +55,10 @@ void cipher(string pt, int key)
             printf("%c", rotate(pt[i], key));
         }
         // If neither, print
-        else printf("%c", pt[i]);
+        else
+        {
+            printf("%c", pt[i]);
+        }
     }
     printf("\n");
 }
@@ -62,15 +66,15 @@ void cipher(string pt, int key)
 // Utility function to rotate our chars handling going past z by resetting the rotation at A
 char rotate(char base, int key)
 {
-    while(key > 0)
+    while (key > 0)
     {
-        if(base == 'z')
+        if (base == 'z')
         {
             base = 'a';
             key--;
             continue;
         }
-        if(base == 'Z')
+        if (base == 'Z')
         {
             base = 'A';
             key--;
@@ -83,5 +87,5 @@ char rotate(char base, int key)
         key--;
     }
     return base;
-    
+
 }
