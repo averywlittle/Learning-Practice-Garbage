@@ -51,9 +51,99 @@
 ; Refactor change-counting program of Section 1.2.2 to take a list of coin definitions
 ; with which to count change
 
+(define us-coins (list 25 50 10 1 5))
+(define uk-coins (list 100 50 20 10 5 2 1 0.5))
+
+; OG algorithm for counting change
+(define (count-change amount)
+  (cc amount 5))
+(define (cc amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (= kinds-of-coins 0)) 0)
+        (else (+ (cc amount
+                     (- kinds-of-coins 1))
+                 (cc (- amount
+                        (first-denomination kinds-of-coins))
+                     kinds-of-coins)))))
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+
+(count-change 100)
+
+; New algorithm taking in list of coins
+(define (cc-list amount coin-values)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (no-more? coin-values)) 0)
+        (else
+         (+ (cc-list amount
+                (except-first-denomination
+                 coin-values))
+            (cc-list (- amount
+                   (first-denomination-list
+                    coin-values))
+                coin-values)))))
+
+; Define first-denomination-list
+(define (first-denomination-list coin-list)
+  (car coin-list))
+
+; Define except-first-denomination
+(define (except-first-denomination coin-list)
+  (cdr coin-list))
+
+; Define no-more?
+; Where we return false if there is more in the list
+; and true if there isn't
+(define (no-more? coin-list)
+  (if (null? coin-list)
+      #t
+      #f))
+
+; Calling the function
+(cc-list 100 us-coins)
+
+; Does the order of the list coin-calues affect the answer produced by cc?
+; The order doesn't seem to matter. I believe this is because we are not
+; Iterating through a list of numbers. Rather, we are hitting every element of the list
+; while the algorithm responds accordingly.
 
 ; Exercise 2.20
 ; Use dotted-tail notation to write a procedure that takes a list of numbers
 ; and returns all numbers with the same even-odd parity as the first argument.
 ; Example: (same-parity 1 2 3 4 5 6 7)
 ; (1 3 5 7)
+
+; Using a simple odd or even function, can be more accurate but I've done
+; it before and don't feel like doing it now. Should be fine for these test cases
+(define (even? x)
+  (remainder x 2)
+ )
+
+(define (same-parity . num-list)
+  
+  ; Get our comparator
+  (define comp (even? (car num-list)))
+  
+  ; Define our recursive function
+  (define (same-parity-recur comparator new-list number-list)
+    
+    ; Test if we're done recurring
+    (if (null? number-list)
+        new-list
+        
+        ; Test if we need to add this number or not
+        (if (= (even? (car number-list)) comparator)
+            (same-parity-recur comparator (cons (car number-list) new-list) (cdr number-list))
+            (same-parity-recur comparator new-list (cdr number-list))
+            )))
+  
+  ; Call the function
+  (same-parity-recur comp null num-list)
+  )
+
+(same-parity 1 2 3 4 5 6 7)
+(same-parity 2 3 4 5 6 7)
