@@ -147,3 +147,46 @@
 
 (same-parity 1 2 3 4 5 6 7)
 (same-parity 2 3 4 5 6 7)
+
+(define (scale-list items factor)
+  (if (null? items)
+      null
+      (cons (* (car items) factor)
+            (scale-list (cdr items)
+                        factor))))
+(scale-list (list 1 2 3 4 5) 10)
+
+; This general method can be captured within a higher order procedure 'Map'
+(define (map proc items)
+  (if (null? items)
+      null
+      (cons (proc (car items))
+            (map proc (cdr items)))))
+
+(map (lambda (x) (* x x)) (list 1 2 3 4))
+
+(define (scale-list-map items factor)
+  (map (lambda (x) (* x factor))
+       items))
+
+; Exercise 2.21
+; Define square list in terms of both list and map implementations
+(define (square-list items)
+  (if (null? items)
+      null
+      (cons (* (car items) (car items))
+            (square-list (cdr items)))))
+
+(define (square-list-map items)
+  (map (lambda (x) (* x x) items)))
+
+; Exercise 2.22
+; Even if you exchange the cons arguments, the list is still being constructed backwards.
+; When it's printed, it will appear reversed.
+
+; Exercise 2.23
+; Give an implementation of for-each. What it returns is arbitrary.
+(define (for-each proc items)
+  (cond ((not (null? items))
+         (proc (car items))
+         (for-each proc (cdr items)))))
