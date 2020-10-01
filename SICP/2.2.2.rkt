@@ -36,8 +36,13 @@
 ; Exercise 2.28
 ; Create a procedure called fringe that takes a tree and returns a list of all the leaves of the tree
 (define (fringe tree)
-  0
-  )
+  (define (iter t result)
+    (cond ((null? t) result)
+          ((not (pair? (car t)))
+           (iter (cdr t) (append t result)))
+          (else
+           (iter (cdr t) result))))
+  (iter tree '()))
 
 (define z (list (list 1 2) (list 3 4)))
 (fringe z)
